@@ -35,10 +35,10 @@ namespace WeatherAPI.Controllers
         }
 
         [HttpPost("/weather/bulk")]
-        public async Task<IActionResult> GetWeathereDataOfCities([FromBody] BulkRequest request)
+        public async Task<GenericResponse<BulkCommandResponse>> GetWeathereDataOfCities([FromBody] BulkRequest request)
         {
             var response = await _weatherAPIServices.GetCitiesWeatherInfo(request);
-            return Ok(response);
+            return response;
         }
 
 

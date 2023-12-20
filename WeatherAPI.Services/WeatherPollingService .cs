@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WeatherAPI.Models.Repo;
+using WeatherAPI.Models.WeatherQueryResponse;
 
 namespace WatherAPI.Services
 {
@@ -54,7 +55,7 @@ namespace WatherAPI.Services
 
 
 
-        private async Task UpdateWeatherData()
+        public async Task UpdateWeatherData()
         {
             
             foreach (var city in ListOfCities)
@@ -62,14 +63,25 @@ namespace WatherAPI.Services
                 var response = await _weatherService.GetCityWeatherInfo(city);
                 if (response.IsSuccess)
                 {
+                    await UpdateCityWeatherData(city, response.Data!);
+                    //string lowerCaseCity = city.ToLower();
                     // Update cache with the latest weather data
-                    await _cachingService.CacheWeatherAsync(city, response.Data!);
+                    //await _cachingService.CacheWeatherAsync(lowerCaseCity, response.Data!);
                 }
                 else
                 {
                     _logger.LogError($"Failed to update weather data for {city}. Error: {response.ErrorMessage}");
                 }
             }
+        }
+
+
+        public async Task UpdateCityWeatherData(string cityName,CityWeatherQueryResponse res)
+        {
+            string lowerCaseCity = cityName.ToLower();
+            // Update cache with the latest weather data
+            await _cachingService.CacheWeatherAsync(lowerCaseCity, res!);
+
         }
     }
 }

@@ -24,25 +24,7 @@ namespace WatherAPI.Services
             _cachingService = cachingService;
         }
 
-        //public  Task<WeatherStatisticResponse> CalculateWeatherStatistics(BulkCommandResponse bulkResponse)
-        //{
-        //    var temperatures =  bulkResponse.Bulk.Select(item => item.Query.Current?.TempC).Where(temp => temp.HasValue).Select(temp => temp!.Value).ToList();
-                
-
-        //    var averageTemperature = temperatures.Average();
-        //    var highestTemperature = temperatures.Max();
-        //    var lowestTemperature = temperatures.Min();
-
-        //    // Create a response object with the calculated statistics
-        //    var statisticsResponse = new WeatherStatisticResponse
-        //    {
-        //        AverageTemperature = averageTemperature,
-        //        HighestTemperature = highestTemperature,
-        //        LowestTemperature = lowestTemperature
-        //    };
-
-        //    return Task.FromResult(statisticsResponse);
-        //}
+       
 
         public async Task<GenericResponse<BulkCommandResponse>> GetCitiesWeatherInfo(BulkRequest request)
         {
@@ -68,31 +50,7 @@ namespace WatherAPI.Services
             
         }
 
-        //public async Task<CityWeatherQueryResponse> GetCityWeatherInfo(string cityName)
-        //{
-        //    var cachedData = await _cachingService.GetCachedWeatherAsync(cityName);
-        //    if (cachedData != null)
-        //    {
-        //        return cachedData;
-        //    }
-        //    string url = $"/current.json?q={cityName}";
-        //    var response = await _client.PerformRequest(url).ConfigureAwait(false);
-
-            
-               
-
-        //        // Deserialize the JSON response
-        //        CityWeatherQueryResponse result = JsonConvert.DeserializeObject<CityWeatherQueryResponse>(response);
-        //        // Cache the result for future use
-        //        await _cachingService.CacheWeatherAsync(cityName, result);
-                
-               
-                
-
-        //        return result;
-            
-            
-        //}
+       
 
         public async Task<GenericResponse<CityWeatherQueryResponse>> GetCityWeatherInfo(string cityName)
         {
@@ -108,7 +66,7 @@ namespace WatherAPI.Services
 
                 string url = $"/current.json?q={cityName}";
                 var response = await _client.PerformRequest(url).ConfigureAwait(false);
-
+                await _cachingService.CacheWeatherAsync(cityName,response.Data!);
                 return response;
             }
             catch (HttpRequestException ex)

@@ -14,7 +14,12 @@ namespace WeatherAPI.Controllers
     [ApiController]
     public class WeatherController : ControllerBase
     {
-       
+        // the solution is maily stractured in 3 main layers
+        // The models layer where domain models is existed.
+        // The service layer that hold the buisness ligic
+        // and the API layer (presentation layer)
+        // This modular design is easier to understand, test, and extend.
+
         private readonly IWeatherAPIServices _weatherAPIServices;
 
         public WeatherController( IWeatherAPIServices weatherAPIServices)

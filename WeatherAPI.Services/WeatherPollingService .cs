@@ -16,6 +16,8 @@ namespace WatherAPI.Services
 
         private readonly IWeatherAPIServices _weatherService;
         private readonly ILogger<IWeatherPollingService> _logger;
+        // since the api interval is equal to 15 minutes, I choose one hour duration which
+        // is larger than 15 minutes and ensuring that I have nearly up todate data
         private readonly TimeSpan _pollingInterval = TimeSpan.FromHours(1);
         private readonly ICachingService _cachingService;
         private readonly ICitySrvice _cityService;

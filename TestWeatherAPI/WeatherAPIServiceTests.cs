@@ -169,28 +169,6 @@ namespace TestWeatherAPI
         }
 
 
-
-        //[Fact]
-        //public async Task GetWeatherStatistics_Success_ReturnsStatistics()
-        //{
-        //    // Arrange
-        //    var bulkResponse = new GenericResponse<BulkCommandResponse>(true, (int)HttpStatusCode.OK, new BulkCommandResponse { /* fill with sample data */ });
-        //    var weatherAPIServicesMock = new Mock<IWeatherAPIServices>();
-        //    weatherAPIServicesMock.Setup(mock => mock.GetCitiesWeatherInfo(It.IsAny<BulkRequest>())).ReturnsAsync(bulkResponse);
-
-        //    var weatherService = new WeatherAPIService(weatherAPIServicesMock.Object, Mock.Of<ICachingService>());
-
-        //    // Act
-        //    var result = await weatherService.GetWeatherStatistics();
-
-        //    // Assert
-        //    Assert.True(result.IsSuccess);
-        //    Assert.Equal((int)HttpStatusCode.OK, result.StatusCode);
-        //    // Add more assertions based on the expected behavior
-        //}
-
-
-
         [Fact]
         public async Task WeatherPollingService_UpdateWeatherData_Success_CachesData()
         {
@@ -342,6 +320,8 @@ namespace TestWeatherAPI
             Assert.Equal(expectedErrorMessage, result.ErrorMessage);
         }
 
+       
+
 
 
     }
@@ -364,5 +344,10 @@ namespace TestWeatherAPI
             
             return obj?.GetHashCode() ?? 0;
         }
+
+
+
+
+
     }
 }

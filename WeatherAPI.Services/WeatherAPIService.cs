@@ -140,7 +140,7 @@ namespace WatherAPI.Services
             return statisticsResponse;
         }
 
-        // ... existing code ...
+        
 
         private BulkRequest MapCitiesToBulkRequest(List<string> cityNames)
         {

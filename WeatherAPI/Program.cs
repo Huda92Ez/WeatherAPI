@@ -1,6 +1,7 @@
 
 using WatherAPI.Services;
 using WeatherAPI.Models.Repo;
+using WeatherAPI.Services;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -23,7 +24,7 @@ builder.Services.AddScoped<IWeatherAPIClient, WeatherAPIClient>();
 //Using a singleton ensures that the cache is shared across the entire application,
 //providing a centralized store for all data
 builder.Services.AddSingleton<ICachingService, CachingService>();
-//builder.Services.AddScoped<ICachingService, CachingService>();
+builder.Services.AddScoped<ICitySrvice, CityService>();
 
 //builder.Services.AddHostedService<WeatherPollingService>();
 //The background service (WeatherPollingService) is a long-lived service responsible
@@ -36,8 +37,8 @@ builder.Services.AddHostedService(provider =>
     {
         var weatherService = scope.ServiceProvider.GetRequiredService<IWeatherAPIServices>();
         var cachingService = scope.ServiceProvider.GetRequiredService<ICachingService>();
-
-        return new WeatherPollingService(weatherService, provider.GetRequiredService<ILogger<WeatherPollingService>>(), cachingService);
+        var cityService = scope.ServiceProvider.GetRequiredService<ICitySrvice>();
+        return new WeatherPollingService(weatherService, provider.GetRequiredService<ILogger<WeatherPollingService>>(), cachingService, cityService);
     }
 });
 builder.Services.AddMemoryCache();

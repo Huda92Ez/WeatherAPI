@@ -11,6 +11,7 @@ using WeatherAPI.Models.BulkModels;
 using WeatherAPI.Models.General;
 using WeatherAPI.Models.Repo;
 using WeatherAPI.Models.WeatherQueryResponse;
+using WeatherAPI.Services;
 
 namespace TestWeatherAPI
 {
@@ -198,6 +199,7 @@ namespace TestWeatherAPI
             var weatherServiceMock = new Mock<IWeatherAPIServices>();
             var cachingServiceMock = new Mock<ICachingService>();
             var loggerMock = new Mock<ILogger<IWeatherPollingService>>();
+            var cityServiceMock = new Mock<ICitySrvice>();
 
             var response = new GenericResponse<CityWeatherQueryResponse>(true, (int)HttpStatusCode.OK, new CityWeatherQueryResponse
             {
@@ -244,7 +246,7 @@ namespace TestWeatherAPI
         
             weatherServiceMock.Setup(mock => mock.GetCityWeatherInfo(cityName)).ReturnsAsync(response);
 
-            var weatherPollingService = new WeatherPollingService(weatherServiceMock.Object, loggerMock.Object, cachingServiceMock.Object);
+            var weatherPollingService = new WeatherPollingService(weatherServiceMock.Object, loggerMock.Object, cachingServiceMock.Object, cityServiceMock.Object);
 
             // Act
             await weatherPollingService.UpdateCityWeatherData(cityName,response.Data!);

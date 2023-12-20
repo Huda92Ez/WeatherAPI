@@ -11,5 +11,9 @@ namespace WeatherAPI.Models.Repo
     {
         Task<CityWeatherQueryResponse?> GetCachedWeatherAsync(string cityName);
         Task CacheWeatherAsync(string cityName, CityWeatherQueryResponse weatherData);
+        Task<IEnumerable<string>> GetCachedCitiesAsync();
+        Task<IEnumerable<string>> GetCacheValueAsync<T>(string cacheKey);
+
+        Task CacheValueAsync<T>(string cacheKey, T data);
     }
 }

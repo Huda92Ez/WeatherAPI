@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WeatherAPI.Models.Repo;
 using WeatherAPI.Models.WeatherQueryResponse;
+using WeatherAPI.Services;
 
 namespace WatherAPI.Services
 {
@@ -17,22 +18,24 @@ namespace WatherAPI.Services
         private readonly ILogger<IWeatherPollingService> _logger;
         private readonly TimeSpan _pollingInterval = TimeSpan.FromHours(1);
         private readonly ICachingService _cachingService;
-        private static readonly List<string> ListOfCities = new List<string>
-        {
-        "Makkah",
-        "Madina",
-        "Riyadh",
-        "Jeddah",
-        "Taif",
-        "Dammam",
-        "Abha",
-        "Jazan"
-        };
-        public WeatherPollingService(IWeatherAPIServices weatherService, ILogger<IWeatherPollingService> logger, ICachingService cachingService)
+        private readonly ICitySrvice _cityService;
+        //private static readonly List<string> ListOfCities = new List<string>
+        //{
+        //"Makkah",
+        //"Madina",
+        //"Riyadh",
+        //"Jeddah",
+        //"Taif",
+        //"Dammam",
+        //"Abha",
+        //"Jazan"
+        //};
+        public WeatherPollingService(IWeatherAPIServices weatherService, ILogger<IWeatherPollingService> logger, ICachingService cachingService, ICitySrvice cityService)
         {
             _weatherService = weatherService;
             _logger = logger;
             _cachingService = cachingService;
+            _cityService = cityService;
         }
         protected  override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -41,7 +44,9 @@ namespace WatherAPI.Services
                 try
                 {
                     // Trigger the weather data update
-                    await UpdateWeatherData();
+                    var cities = await _cityService.GetCitiesAsync();
+                    await UpdateWeatherData(cities);
+                    //await UpdateWeatherData();
                 }
                 catch (Exception ex)
                 {
@@ -55,18 +60,17 @@ namespace WatherAPI.Services
 
 
 
-        public async Task UpdateWeatherData()
+        public async Task UpdateWeatherData(IEnumerable<string> cities)
         {
             
-            foreach (var city in ListOfCities)
+            foreach (var city in cities)
             {
                 var response = await _weatherService.GetCityWeatherInfo(city);
                 if (response.IsSuccess)
                 {
+                    
                     await UpdateCityWeatherData(city, response.Data!);
-                    //string lowerCaseCity = city.ToLower();
-                    // Update cache with the latest weather data
-                    //await _cachingService.CacheWeatherAsync(lowerCaseCity, response.Data!);
+                    
                 }
                 else
                 {
